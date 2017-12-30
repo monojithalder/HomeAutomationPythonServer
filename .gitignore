@@ -1,0 +1,5 @@
+#Ignore Aptana config file
+.project
+.pydevproject
+#Ignore python .pyc file
+*.pyc
