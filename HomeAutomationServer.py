@@ -2,8 +2,11 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from urlparse import parse_qs
 import cgi
 import serial
+import time
 
 class GP(BaseHTTPRequestHandler):
+    ser = serial.Serial('/dev/ttyACM0', 9600)
+    time.sleep(10)
     def _set_headers(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
@@ -23,8 +26,9 @@ class GP(BaseHTTPRequestHandler):
         )
         print form.getvalue("foo")
         pin_no = form.getvalue("pinNo")
-        ser = serial.Serial('/dev/ttyACM0', 9600)
-        ser.write(pin_no)
+        self.ser.write(pin_no)
+        #time.sleep(2)
+        #self.ser.close();
         self.wfile.write("{'success': true}")
 
 def run(server_class=HTTPServer, handler_class=GP, port=8088):
