@@ -27,9 +27,7 @@ class GP(BaseHTTPRequestHandler):
         print form.getvalue("foo")
         pin_no = form.getvalue("pinNo")
         self.ser.write(pin_no)
-        #time.sleep(2)
-        #self.ser.close();
-        self.wfile.write("{'success': true}")
+        self.wfile.write('{"success": 1}')
 
 def run(server_class=HTTPServer, handler_class=GP, port=8088):
     server_address = ('', port)
