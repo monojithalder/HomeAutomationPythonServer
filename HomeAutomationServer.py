@@ -3,10 +3,23 @@ from urlparse import parse_qs
 import cgi
 import serial
 import time
+import sys
+import glob
 
 class GP(BaseHTTPRequestHandler):
-    ser = serial.Serial('/dev/ttyACM0', 9600)
+    ports = glob.glob('/dev/tty[A-Za-z]*')
+    result = []
+    for port in ports:
+        try:
+            s = serial.Serial(port)
+            s.close()
+            result.append(port)
+        except (OSError, serial.SerialException):
+            pass
+    port = result[0]
+    ser = serial.Serial(port, 9600)
     time.sleep(10)
+    
     def _set_headers(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
@@ -28,6 +41,7 @@ class GP(BaseHTTPRequestHandler):
         pin_no = form.getvalue("pinNo")
         self.ser.write(pin_no)
         self.wfile.write('{"success": 1}')
+        
 
 def run(server_class=HTTPServer, handler_class=GP, port=8088):
     server_address = ('', port)
