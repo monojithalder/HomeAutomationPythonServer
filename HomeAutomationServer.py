@@ -44,6 +44,7 @@ class GP(BaseHTTPRequestHandler):
         pin_no = form.getvalue("pinNo")
         try:
             ser.write(pin_no)
+            time.sleep(5)
             self.wfile.write('{"success": 1}')
         except:
             ports = glob.glob('/dev/tty[A-Za-z]*')
